@@ -1,10 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-
-import Navbar from '@/components/navbar/Navbar';
-import Modal from '@/components/modals/Modal';
-import RegisterModal from '@/components/modals/RegisterModal';
+import RegisterModal from './components/modals/RegisterModal';
+import Navbar from './components/navbar/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
