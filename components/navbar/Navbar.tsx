@@ -1,7 +1,10 @@
+'use client';
+
 import { NextPage } from 'next';
 import Container from '../Container';
 import Logo from './Logo';
 import Search from './Search';
+import UserMenu from './UserMenu';
 
 interface Props {}
 
@@ -22,6 +25,7 @@ const Navbar: NextPage<Props> = ({}) => {
           >
             <Logo />
             <Search />
+            <UserMenu />
           </div>
         </Container>
       </div>
