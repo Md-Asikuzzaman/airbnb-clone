@@ -8,6 +8,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 
 import Modal from './Modal';
 import Heading from '../Heading';
@@ -87,13 +88,13 @@ const RegisterModal: NextPage<Props> = ({}) => {
         label='Continue with Google'
         outline
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn('google', { redirect: false })}
       />
       <Button
         label='Continue with Github'
         outline
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn('github', { redirect: false })}
       />
       <div
         className='

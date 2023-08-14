@@ -64,7 +64,7 @@ const UserMenu: NextPage<Props> = ({ currentUser }) => {
             md:block
           '
           >
-            <Avatar />
+            <Avatar src={currentUser?.image} />
           </div>
         </div>
       </div>

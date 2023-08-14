@@ -93,13 +93,13 @@ const LoginModal: NextPage<Props> = ({}) => {
         label='Continue with Google'
         outline
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn('google', { redirect: false })}
       />
       <Button
         label='Continue with Github'
         outline
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn('github', { redirect: false })}
       />
       <div
         className='
