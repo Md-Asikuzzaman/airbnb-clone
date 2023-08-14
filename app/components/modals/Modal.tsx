@@ -185,6 +185,7 @@ const Modal: NextPage<Props> = ({
                     onClick={handleSubmit}
                   />
                 </div>
+                {footer}
               </div>
             </div>
           </div>
