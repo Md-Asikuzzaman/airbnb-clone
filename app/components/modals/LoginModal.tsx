@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import axios from 'axios';
@@ -61,6 +61,11 @@ const LoginModal: NextPage<Props> = ({}) => {
       .catch(() => {});
   };
 
+  const toggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
+
   const bodyContent = (
     <div className='flex flex-col gap-4'>
       <Heading title='Welcome back' subtitle='Login to your account!' />
@@ -110,12 +115,12 @@ const LoginModal: NextPage<Props> = ({}) => {
       '
       >
         <div className='flex flex-row items-center justify-center gap-2'>
-          <div>Already have an account?</div>
+          <div>First time using Netflix?</div>
           <div
-            onClick={registerModal.onClose}
+            onClick={toggle}
             className='text-neutral-800 cursor-pointer hover:underline'
           >
-            Log in
+            Create an account
           </div>
         </div>
       </div>

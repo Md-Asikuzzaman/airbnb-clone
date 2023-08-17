@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 
 import axios from 'axios';
@@ -15,11 +15,13 @@ import Heading from '../Heading';
 import Input from '../inputs/Input';
 import useRegisterModal from '@/app/hooks/useRegisterModal';
 import Button from '../Button';
+import useLoginModal from '@/app/hooks/useLoginModal';
 
 interface Props {}
 
 const RegisterModal: NextPage<Props> = ({}) => {
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const {
@@ -41,12 +43,19 @@ const RegisterModal: NextPage<Props> = ({}) => {
       .post('/api/register', data)
       .then(() => {
         registerModal.onClose();
+        loginModal.onOpen();
+        toast.success('Account created successfully!');
       })
       .catch((error) => {
         toast.error('Something went wrong!');
       })
       .finally(() => setIsLoading(false));
   };
+
+  const toggle = useCallback(() => {
+    registerModal.onClose();
+    loginModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className='flex flex-col gap-4'>
@@ -107,7 +116,7 @@ const RegisterModal: NextPage<Props> = ({}) => {
         <div className='flex flex-row items-center justify-center gap-2'>
           <div>Already have an account?</div>
           <div
-            onClick={registerModal.onClose}
+            onClick={toggle}
             className='text-neutral-800 cursor-pointer hover:underline'
           >
             Log in
