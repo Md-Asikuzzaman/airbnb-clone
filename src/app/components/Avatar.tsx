@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { memo } from "react";
 
 const Avatar = () => {
+  console.log("from avatar");
+
   return (
     <Image
       className="rounded-full"
@@ -14,4 +17,4 @@ const Avatar = () => {
   );
 };
 
-export default Avatar;
+export default memo(Avatar);
