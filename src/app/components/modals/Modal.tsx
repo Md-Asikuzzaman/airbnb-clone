@@ -16,7 +16,7 @@ interface Props {
   actionLabel: string;
   disabled?: boolean;
   secondaryAction?: () => void;
-  secondaryLabel?: string;
+  secondaryActionLabel?: string;
 }
 
 const Modal: NextPage<Props> = ({
@@ -29,7 +29,7 @@ const Modal: NextPage<Props> = ({
   actionLabel,
   disabled,
   secondaryAction,
-  secondaryLabel,
+  secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState<boolean | undefined>(isOpen);
 
@@ -104,7 +104,19 @@ const Modal: NextPage<Props> = ({
             {/* MODAL FOOTER */}
             <div className="flex flex-col gap-2 p-6">
               <div className="flex flex-row items-center gap-4 w-full">
-                <Button icon={IoMdClose} label="Sign in" />
+                {secondaryAction && secondaryActionLabel && (
+                  <Button
+                    outline
+                    disabled={disabled}
+                    label={secondaryActionLabel}
+                    onClick={handleSunmit}
+                  />
+                )}
+                <Button
+                  disabled={disabled}
+                  label={actionLabel}
+                  onClick={handleSunmit}
+                />
               </div>
             </div>
           </div>

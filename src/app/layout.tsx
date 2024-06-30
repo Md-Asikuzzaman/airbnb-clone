@@ -20,7 +20,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        <Modal title="Hello there!" isOpen />
+        <Modal
+          actionLabel="hello"
+          secondaryActionLabel="ok"
+          title="Hello there!"
+          isOpen
+        />
         {children}
       </body>
     </html>
