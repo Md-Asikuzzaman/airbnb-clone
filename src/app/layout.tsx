@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/navbar/Navbar";
 import Modal from "./components/modals/Modal";
+import RegisterModal from "./components/modals/RegisterModal";
+import ReactQueryProvider from "./components/providers/ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,14 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        <Modal
-          actionLabel="hello"
-          secondaryActionLabel="ok"
-          title="Hello there!"
-          isOpen
-        />
-        {children}
+        <ReactQueryProvider>
+          <Navbar />
+          <RegisterModal />
+          {children}
+        </ReactQueryProvider>
       </body>
     </html>
   );
