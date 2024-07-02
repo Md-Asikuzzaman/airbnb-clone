@@ -2,13 +2,19 @@
 
 import Modal from "./Modal";
 
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { z } from "zod";
 import signUpSchema from "@/schema/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Heading from "../Heading";
+import Input from "../inputs/Input";
+import toast from "react-hot-toast";
+import { AiFillGithub } from "react-icons/ai";
+import Button from "../Button";
+import { FcGoogle } from "react-icons/fc";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -37,15 +43,85 @@ const RegisterModal = () => {
         });
 
         return data;
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
+        toast.error(error.message);
       }
     },
   });
 
   const onSubmit = (data: FormData) => {
     mutate(data);
+
+    console.log(data);
   };
+
+  const bodyContent = (
+    <div className="flex flex-col gap-4">
+      <Heading title="Welcome to Airbnb" subtitle="Create an account" />
+      <Input
+        id="email"
+        label="Email"
+        disabled={isPending}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="name"
+        label="Name"
+        disabled={isPending}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="password"
+        label="Password"
+        type="password"
+        disabled={isPending}
+        register={register}
+        errors={errors}
+        required
+      />
+    </div>
+  );
+
+  const footerContent = (
+    <div className="flex flex-col gap-4 mt-3">
+      <hr />
+      <Button
+        label="Continue with Google"
+        outline
+        icon={FcGoogle}
+        onClick={() => {}}
+      />
+      <Button
+        label="Continue with Github"
+        outline
+        icon={AiFillGithub}
+        onClick={() => {}}
+      />
+      <div
+        className="
+        text-neutral-500
+        text-center
+        mt-4
+        font-light
+      "
+      >
+        <div className="flex flex-row items-center justify-center gap-2">
+          <div>Already have an account?</div>
+          <div
+            onClick={() => {}}
+            className="text-neutral-800 cursor-pointer hover:underline"
+          >
+            Log in
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div>
@@ -56,6 +132,8 @@ const RegisterModal = () => {
         actionLabel="Continue"
         onClose={registerModal.onClose}
         onSubmit={handleSubmit(onSubmit)}
+        body={bodyContent}
+        footer={footerContent}
       />
     </div>
   );

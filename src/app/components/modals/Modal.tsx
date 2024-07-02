@@ -118,6 +118,7 @@ const Modal: NextPage<Props> = ({
                   onClick={handleSunmit}
                 />
               </div>
+              {footer}
             </div>
           </div>
         </div>
