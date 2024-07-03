@@ -1,25 +1,28 @@
 "use client";
 
-import Modal from "./Modal";
-
-import { useForm } from "react-hook-form";
-import useRegisterModal from "@/app/hooks/useRegisterModal";
-import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
-import signUpSchema from "@/schema/signUpSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Heading from "../Heading";
-import Input from "../inputs/Input";
 import toast from "react-hot-toast";
+
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import signUpSchema from "@/schema/signUpSchema";
+import useRegisterModal from "@/app/hooks/useRegisterModal";
+
 import { AiFillGithub } from "react-icons/ai";
-import Button from "../Button";
 import { FcGoogle } from "react-icons/fc";
 
-const RegisterModal = () => {
-  const registerModal = useRegisterModal();
+import Heading from "../Heading";
+import Modal from "./Modal";
+import Input from "../inputs/Input";
+import Button from "../Button";
 
+const RegisterModal = () => {
   type FormData = z.infer<typeof signUpSchema>;
+
+  const registerModal = useRegisterModal();
 
   const {
     register,
