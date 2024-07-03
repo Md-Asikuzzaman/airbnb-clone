@@ -37,26 +37,28 @@ const RegisterModal = () => {
     },
   });
 
-  const { mutate, isPending, isSuccess } = useMutation({
+  const { mutate, isPending, isSuccess, data } = useMutation({
     mutationKey: ["register"],
     mutationFn: async (formData: FormData) => {
-      try {
-        const { data } = await axios.post("/api/register", formData, {
-          baseURL: process.env.NEXTAUTH_URL,
-        });
+      const { data } = await axios.post("/api/register", formData, {
+        baseURL: process.env.NEXTAUTH_URL,
+      });
 
-        return data;
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.message);
-      }
+      return data;
+    },
+
+    onSuccess: (data: any) => {
+      toast.success("User Created Successfully");
+      console.log(data);
+    },
+
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    mutate(data);
-
-    console.log(data);
+  const onSubmit = (formData: FormData) => {
+    mutate(formData);
   };
 
   const bodyContent = (
