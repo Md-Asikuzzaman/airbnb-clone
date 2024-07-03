@@ -1,10 +1,11 @@
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import bcrypt from "bcrypt";
-import { NextResponse } from "next/server";
+import { User } from "@prisma/client";
 
 interface ApiResponse {
   message?: string;
-  user?: UserType;
+  user?: User;
 }
 
 export async function POST(
