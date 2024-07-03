@@ -101,7 +101,7 @@ const LoginModal = () => {
         label="Continue with Google"
         outline
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn("google")}
       />
       <Button
         label="Continue with Github"

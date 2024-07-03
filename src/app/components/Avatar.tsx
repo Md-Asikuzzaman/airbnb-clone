@@ -1,18 +1,20 @@
 "use client";
 
+import { NextPage } from "next";
 import Image from "next/image";
 import { memo } from "react";
+interface Props {
+  src?: string | null;
+}
 
-const Avatar = () => {
-  console.log("from avatar");
-
+const Avatar: NextPage<Props> = ({ src }) => {
   return (
     <Image
       className="rounded-full"
       height={30}
       width={30}
       alt="Avatar"
-      src={"/images/avatar.jpg"}
+      src={src ?? "/images/avatar.jpg"}
     />
   );
 };
