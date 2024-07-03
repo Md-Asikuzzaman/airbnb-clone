@@ -4,10 +4,21 @@ import { NextPage } from "next";
 import Container from "../Container";
 import { categories } from "@/lib/categories";
 import CategoryBox from "../CategoryBox";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface Props {}
 
 const Categories: NextPage<Props> = ({}) => {
+  const params = useSearchParams();
+  const category = params.get("category");
+  const pathname = usePathname();
+
+  const isMainPage = pathname === "/";
+
+  if (!isMainPage) {
+    return null;
+  }
+
   return (
     <Container>
       <div className="pt-4 flex items-center justify-between overflow-x-auto">
@@ -16,7 +27,7 @@ const Categories: NextPage<Props> = ({}) => {
             <CategoryBox
               key={item.label}
               label={item.label}
-              description={item.description}
+              selected={category === item.label}
               icon={item.icon}
             />
           </div>
