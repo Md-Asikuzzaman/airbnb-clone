@@ -8,7 +8,7 @@ import UserMenu from "./UserMenu";
 import { User } from "@prisma/client";
 
 interface Props {
-  currentUser: User | null;
+  currentUser?: User | null;
 }
 
 const Navbar: NextPage<Props> = ({ currentUser }) => {
@@ -19,7 +19,7 @@ const Navbar: NextPage<Props> = ({ currentUser }) => {
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
             <Logo />
             <Search />
-            <UserMenu />
+            <UserMenu currentUser={currentUser} />
           </div>
         </Container>
       </div>
