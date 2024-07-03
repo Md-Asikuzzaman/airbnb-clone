@@ -17,6 +17,7 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Button from "../Button";
 import registerSchema from "@/schema/registerSchema";
+import { signIn } from "next-auth/react";
 
 const RegisterModal = () => {
   type FormData = z.infer<typeof registerSchema>;
@@ -98,13 +99,13 @@ const RegisterModal = () => {
         label="Continue with Google"
         outline
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn("google")}
       />
       <Button
         label="Continue with Github"
         outline
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn("github")}
       />
       <div
         className="
