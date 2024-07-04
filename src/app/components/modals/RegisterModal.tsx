@@ -18,11 +18,19 @@ import Input from "../inputs/Input";
 import Button from "../Button";
 import registerSchema from "@/schema/registerSchema";
 import { signIn } from "next-auth/react";
+import useLoginModal from "@/app/hooks/useLoginModal";
+import { useCallback } from "react";
 
 const RegisterModal = () => {
   type FormData = z.infer<typeof registerSchema>;
 
+  const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
+
+  const toogle = useCallback(() => {
+    loginModal.onOpen();
+    registerModal.onClose();
+  }, [loginModal, registerModal]);
 
   const {
     register,
@@ -49,7 +57,7 @@ const RegisterModal = () => {
 
     onSuccess: (data: any) => {
       toast.success("User Created Successfully");
-      console.log(data);
+      toogle();
     },
 
     onError: (error: any) => {
@@ -118,7 +126,7 @@ const RegisterModal = () => {
         <div className="flex flex-row items-center justify-center gap-2">
           <div>Already have an account?</div>
           <div
-            onClick={() => {}}
+            onClick={toogle}
             className="text-neutral-800 cursor-pointer hover:underline"
           >
             Log in

@@ -18,9 +18,10 @@ import Modal from "./Modal";
 import Input from "../inputs/Input";
 import Button from "../Button";
 import loginSchema from "@/schema/LoginSchema";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useRegisterModal from "@/app/hooks/useRegisterModal";
 
 const LoginModal = () => {
   const [isPending, setInPending] = useState<boolean>(false);
@@ -29,6 +30,7 @@ const LoginModal = () => {
   type FormData = z.infer<typeof loginSchema>;
 
   const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
 
   const {
     register,
@@ -43,10 +45,6 @@ const LoginModal = () => {
   });
 
   const onSubmit = (formData: FormData) => {
-    // mutate(formData);
-
-    console.log(formData);
-
     signIn("credentials", {
       ...formData,
       redirect: false,
@@ -70,6 +68,11 @@ const LoginModal = () => {
         setInPending(false);
       });
   };
+
+  const toogle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -118,12 +121,12 @@ const LoginModal = () => {
       "
       >
         <div className="flex flex-row items-center justify-center gap-2">
-          <div>Already have an account?</div>
+          <div>First time using Airbnb?</div>
           <div
-            onClick={() => {}}
+            onClick={toogle}
             className="text-neutral-800 cursor-pointer hover:underline"
           >
-            Log in
+            Create an Account
           </div>
         </div>
       </div>
@@ -135,7 +138,7 @@ const LoginModal = () => {
       <Modal
         disabled={isPending}
         isOpen={loginModal.isOpen}
-        title="Register"
+        title="Login"
         actionLabel="Continue"
         onClose={loginModal.onClose}
         onSubmit={handleSubmit(onSubmit)}
