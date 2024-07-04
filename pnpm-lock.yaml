@@ -35,6 +35,9 @@ importers:
       next-auth:
         specifier: ^4.24.7
         version: 4.24.7(next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      pigeon-maps:
+        specifier: ^0.21.6
+        version: 0.21.6(react@18.3.1)
       query-string:
         specifier: ^9.0.0
         version: 9.0.0
@@ -53,6 +56,9 @@ importers:
       react-icons:
         specifier: ^5.2.1
         version: 5.2.1(react@18.3.1)
+      react-leaflet:
+        specifier: ^4.2.1
+        version: 4.2.1(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-select:
         specifier: ^5.8.0
         version: 5.8.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -397,6 +403,13 @@ packages:
 
   '@prisma/get-platform@5.16.0':
     resolution: {integrity: sha512-ynp2jAYfYdd7OObX+uWaFRpvhPVmpF0nsRMhbrWdVVUj39q3Zr8dGz5WDj2g+BTUE++u1T1Am3RyM3PBQdDZXA==}
+
+  '@react-leaflet/core@2.1.0':
+    resolution: {integrity: sha512-Qk7Pfu8BSarKGqILj4x7bCSZ1pjuAPZ+qmRwH5S7mDS91VSbVVsJSrW4qA+GPrro8t69gFYVMWb1Zc4yFmPiVg==}
+    peerDependencies:
+      leaflet: ^1.9.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
 
   '@rushstack/eslint-patch@1.10.3':
     resolution: {integrity: sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==}
@@ -1366,6 +1379,9 @@ packages:
     resolution: {integrity: sha512-MbjN408fEndfiQXbFQ1vnd+1NoLDsnQW41410oQBXiyXDMYH5z505juWa4KUE1LqxRC7DgOgZDbKLxHIwm27hA==}
     engines: {node: '>=0.10'}
 
+  leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
+
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -1650,6 +1666,11 @@ packages:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
 
+  pigeon-maps@0.21.6:
+    resolution: {integrity: sha512-6io58lhpbtVT/DUKDoOqsjeAFW46Nfe+gr4PX/kmD1dyJxfb8WaT4hcgwcmM8dJdkyfibgLHo59Uo2o2/xscaQ==}
+    peerDependencies:
+      react: '*'
+
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
@@ -1773,6 +1794,13 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-leaflet@4.2.1:
+    resolution: {integrity: sha512-p9chkvhcKrWn/H/1FFeVSqLdReGwn2qmiobOQGO3BifX+/vV/39qhY8dGqbdcPh1e6jxh/QHriLXr7a4eLFK4Q==}
+    peerDependencies:
+      leaflet: ^1.9.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
 
   react-select@5.8.0:
     resolution: {integrity: sha512-TfjLDo58XrhP6VG5M/Mi56Us0Yt8X7xD6cDybC7yoRMUNm7BGO7qk8J0TLQOua/prb8vUOtsfnXZwfm30HGsAA==}
@@ -2517,6 +2545,12 @@ snapshots:
   '@prisma/get-platform@5.16.0':
     dependencies:
       '@prisma/debug': 5.16.0
+
+  '@react-leaflet/core@2.1.0(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      leaflet: 1.9.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@rushstack/eslint-patch@1.10.3': {}
 
@@ -3699,6 +3733,8 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
+  leaflet@1.9.4: {}
+
   levn@0.4.1:
     dependencies:
       prelude-ls: 1.2.1
@@ -3968,6 +4004,10 @@ snapshots:
 
   pify@2.3.0: {}
 
+  pigeon-maps@0.21.6(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
   pirates@4.0.6: {}
 
   possible-typed-array-names@1.0.0: {}
@@ -4078,6 +4118,13 @@ snapshots:
       react: 18.3.1
 
   react-is@16.13.1: {}
+
+  react-leaflet@4.2.1(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@react-leaflet/core': 2.1.0(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      leaflet: 1.9.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-select@5.8.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

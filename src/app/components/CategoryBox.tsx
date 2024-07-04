@@ -8,18 +8,12 @@ import { IconType } from "react-icons";
 import qs from "query-string";
 
 interface Props {
-  key: string;
   label: string;
   icon: IconType;
   selected?: boolean;
 }
 
-const CategoryBox: NextPage<Props> = ({
-  key,
-  label,
-  icon: Icon,
-  selected,
-}) => {
+const CategoryBox: NextPage<Props> = ({ label, icon: Icon, selected }) => {
   const router = useRouter();
   const params = useSearchParams();
 
