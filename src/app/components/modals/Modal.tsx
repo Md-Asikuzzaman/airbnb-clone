@@ -109,7 +109,7 @@ const Modal: NextPage<Props> = ({
                     outline
                     disabled={disabled}
                     label={secondaryActionLabel}
-                    onClick={handleSunmit}
+                    onClick={handleSecondaryAction}
                   />
                 )}
                 <Button
