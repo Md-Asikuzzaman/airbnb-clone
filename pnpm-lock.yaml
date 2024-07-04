@@ -35,6 +35,9 @@ importers:
       next-auth:
         specifier: ^4.24.7
         version: 4.24.7(next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-file-64ify:
+        specifier: ^2.1.5
+        version: 2.1.5
       pigeon-maps:
         specifier: ^0.21.6
         version: 0.21.6(react@18.3.1)
@@ -1501,6 +1504,9 @@ packages:
     peerDependenciesMeta:
       nodemailer:
         optional: true
+
+  next-file-64ify@2.1.5:
+    resolution: {integrity: sha512-xgc4Gy8LZxh62D3SAguPiopPJlAWXStDIshXbd6fbM9GbRinXyFb+cwC+3sw7gEd5CWiD7q4bQj/iFsA2XlSLQ==}
 
   next@14.2.4:
     resolution: {integrity: sha512-R8/V7vugY+822rsQGQCjoLhMuC9oFj9SOi4Cl4b2wjDrseD0LRZ10W7R6Czo4w9ZznVSshKjuIomsRjvm9EKJQ==}
@@ -3838,6 +3844,8 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       uuid: 8.3.2
+
+  next-file-64ify@2.1.5: {}
 
   next@14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
