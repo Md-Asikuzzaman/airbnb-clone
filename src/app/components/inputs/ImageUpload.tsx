@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { TbPhotoPlus } from "react-icons/tb";
 
 import { _64ify } from "next-file-64ify";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 interface Props {
@@ -15,11 +15,11 @@ interface Props {
 const ImageUpload: NextPage<Props> = ({ value, onChange }) => {
   const [myFile, setMyFile] = useState<File | null>(null);
 
-  const allowedTypes = ["image/jpeg", "image/png"];
-  const allowedFileSize = { minSize: 0, maxSize: 1024 };
-
   if (myFile) {
     const base64 = async () => {
+      const allowedTypes = ["image/jpeg", "image/png"];
+      const allowedFileSize = { minSize: 0, maxSize: 1024 };
+
       const { data, isLoading, isError, isValidSize } = await _64ify(
         myFile,
         allowedTypes,
@@ -30,6 +30,7 @@ const ImageUpload: NextPage<Props> = ({ value, onChange }) => {
     };
 
     base64();
+    setMyFile(null);
   }
 
   return (
@@ -60,4 +61,4 @@ const ImageUpload: NextPage<Props> = ({ value, onChange }) => {
   );
 };
 
-export default ImageUpload;
+export default React.memo(ImageUpload);
