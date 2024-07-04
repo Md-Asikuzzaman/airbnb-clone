@@ -6,6 +6,7 @@ import ReactQueryProvider from "./components/providers/ReactQueryProvider";
 import LoginModal from "./components/modals/LoginModal";
 import getCurrentUser from "@/actions/getCurrentUser";
 import "./globals.css";
+import RentModal from "./components/modals/RentModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <ReactQueryProvider>
           <Navbar currentUser={currentUser} />
+          <RentModal />
           <RegisterModal />
           <LoginModal />
           {children}
