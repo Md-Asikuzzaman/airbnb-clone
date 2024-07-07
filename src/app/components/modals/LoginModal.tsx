@@ -13,13 +13,13 @@ import { FcGoogle } from "react-icons/fc";
 
 import Heading from "../Heading";
 import Modal from "./Modal";
-import Input from "../inputs/Input";
 import Button from "../Button";
-import loginSchema from "@/schema/LoginSchema";
+import loginSchema from "@/schema/loginSchema";
 import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import LoginInput from "../inputs/LoginInput";
 
 const LoginModal = () => {
   const [isPending, setInPending] = useState<boolean>(false);
@@ -75,7 +75,7 @@ const LoginModal = () => {
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome back" subtitle="Login to your account" />
-      <Input
+      <LoginInput
         id="email"
         label="Email"
         disabled={isPending}
@@ -83,7 +83,7 @@ const LoginModal = () => {
         errors={errors}
         required
       />
-      <Input
+      <LoginInput
         id="password"
         label="Password"
         type="password"

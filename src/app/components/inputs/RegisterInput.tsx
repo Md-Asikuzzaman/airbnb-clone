@@ -1,13 +1,13 @@
 "use client";
 
-import signUpSchema from "@/schema/signUpSchema";
 import clsx from "clsx";
 import { NextPage } from "next";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
 import { z } from "zod";
+import registerSchema from "@/schema/registerSchema";
 
-type FormData = z.infer<typeof signUpSchema>;
+type FormData = z.infer<typeof registerSchema>;
 
 interface Props {
   id: "name" | "email" | "password";
@@ -20,7 +20,7 @@ interface Props {
   errors: FieldErrors;
 }
 
-const Input: NextPage<Props> = ({
+const RegisterInput: NextPage<Props> = ({
   id,
   label,
   type = "text",
@@ -67,4 +67,4 @@ const Input: NextPage<Props> = ({
   );
 };
 
-export default Input;
+export default RegisterInput;

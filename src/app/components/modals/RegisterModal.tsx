@@ -14,12 +14,13 @@ import { FcGoogle } from "react-icons/fc";
 
 import Heading from "../Heading";
 import Modal from "./Modal";
-import Input from "../inputs/Input";
+import Input from "../inputs/LoginInput";
 import Button from "../Button";
 import registerSchema from "@/schema/registerSchema";
 import { signIn } from "next-auth/react";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { useCallback } from "react";
+import RegisterInput from "../inputs/RegisterInput";
 
 const RegisterModal = () => {
   type FormData = z.infer<typeof registerSchema>;
@@ -72,7 +73,7 @@ const RegisterModal = () => {
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome to Airbnb" subtitle="Create an account" />
-      <Input
+      <RegisterInput
         id="email"
         label="Email"
         disabled={isPending}
@@ -80,7 +81,7 @@ const RegisterModal = () => {
         errors={errors}
         required
       />
-      <Input
+      <RegisterInput
         id="name"
         label="Name"
         disabled={isPending}
@@ -88,7 +89,7 @@ const RegisterModal = () => {
         errors={errors}
         required
       />
-      <Input
+      <RegisterInput
         id="password"
         label="Password"
         type="password"
