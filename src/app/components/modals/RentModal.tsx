@@ -15,6 +15,10 @@ import Input from "../inputs/LoginInput";
 import RentInput from "../inputs/RentInput";
 import rentSchema from "@/schema/rentSchema";
 import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 enum STEPS {
   CATEGORY = 0,
@@ -28,7 +32,7 @@ enum STEPS {
 const RentModal = () => {
   const rentModal = useRentModal();
   const [step, setStep] = useState<number>(STEPS.CATEGORY);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const {
     register,
@@ -86,10 +90,32 @@ const RentModal = () => {
     if (step !== STEPS.PRICE) {
       return onNext();
     }
-    console.log(data);
-
-    reset();
+    mutate(data);
   };
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["createListing"],
+    mutationFn: async (formData: FieldValues) => {
+      await axios.post("/api/listing", formData, {
+        baseURL: process.env.NEXTAUTH_URL,
+      });
+    },
+
+    onError: (error: any) => {
+      toast.error(error.response.data.message);
+    },
+
+    onSuccess: () => {
+      toast.success("Listing Created");
+      rentModal.onClose();
+    },
+
+    onMutate: () => {
+      reset();
+      setStep(STEPS.CATEGORY);
+      router.refresh();
+    },
+  });
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
@@ -217,7 +243,7 @@ const RentModal = () => {
           type="text"
           id="title"
           label="Title"
-          disabled={isLoading}
+          disabled={isPending}
           register={register}
           errors={errors}
           required
@@ -227,7 +253,7 @@ const RentModal = () => {
           type="text"
           id="description"
           label="Description"
-          disabled={isLoading}
+          disabled={isPending}
           register={register}
           errors={errors}
           required
@@ -247,7 +273,7 @@ const RentModal = () => {
           id="price"
           label="Price"
           type="number"
-          disabled={isLoading}
+          disabled={isPending}
           register={register}
           errors={errors}
           required

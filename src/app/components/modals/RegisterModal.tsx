@@ -56,13 +56,13 @@ const RegisterModal = () => {
       return data;
     },
 
-    onSuccess: (data: any) => {
-      toast.success("User Created Successfully");
-      toogle();
-    },
-
     onError: (error: any) => {
       toast.error(error.response.data.message);
+    },
+    
+    onSuccess: () => {
+      toast.success("User Created Successfully");
+      toogle();
     },
   });
 
