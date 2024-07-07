@@ -30,7 +30,7 @@ export default async function RootLayout({
           <RentModal />
           <RegisterModal />
           <LoginModal />
-          {children}
+          <div className="pb-20 pt-28">{children}</div>
         </ReactQueryProvider>
       </body>
     </html>
