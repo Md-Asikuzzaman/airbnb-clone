@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const rentSchema = z.object({
+const listingSchema = z.object({
   title: z.string(),
   description: z.string().min(3).max(20),
   category: z.string(),
@@ -12,4 +12,4 @@ const rentSchema = z.object({
   price: z.string(),
 });
 
-export default rentSchema;
+export default listingSchema;

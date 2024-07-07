@@ -6,7 +6,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
 import { z } from "zod";
 import registerSchema from "@/schema/registerSchema";
-import rentSchema from "@/schema/rentSchema";
+import rentSchema from "@/schema/listingSchema";
 import React from "react";
 
 type FormData = z.infer<typeof rentSchema>;

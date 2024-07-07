@@ -1,6 +1,6 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import prisma from "@/lib/prismadb";
-import rentSchema from "@/schema/rentSchema";
+import listingSchema from "@/schema/listingSchema";
 import { Listing } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -24,7 +24,7 @@ export async function POST(
     }
 
     const body = await req.json();
-    const { success, data, error } = rentSchema.safeParse(body);
+    const { success, data, error } = listingSchema.safeParse(body);
 
     if (!success || error) {
       const errorMessage = error
