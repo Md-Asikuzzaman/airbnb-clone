@@ -3,6 +3,8 @@
 import clsx from "clsx";
 import { NextPage } from "next";
 import { IconType } from "react-icons";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { BiLoaderAlt } from "react-icons/bi";
 
 interface Props {
   label: string;
@@ -11,6 +13,7 @@ interface Props {
   outline?: boolean;
   small?: boolean;
   icon?: IconType;
+  isPending?: boolean;
 }
 
 const Button: NextPage<Props> = ({
@@ -20,6 +23,7 @@ const Button: NextPage<Props> = ({
   outline,
   small,
   icon: Icon,
+  isPending,
 }) => {
   return (
     <button
@@ -37,7 +41,12 @@ const Button: NextPage<Props> = ({
       )}
     >
       {Icon && <Icon size={24} className="absolute left-4 top-3" />}
-      {label}
+      <div className="flex items-center gap-2 justify-center">
+        {isPending && (
+          <BiLoaderAlt size={20} className="animate-spin duration-100" />
+        )}
+        {label}
+      </div>
     </button>
   );
 };

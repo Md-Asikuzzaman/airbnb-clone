@@ -22,7 +22,7 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 import LoginInput from "../inputs/LoginInput";
 
 const LoginModal = () => {
-  const [isPending, setInPending] = useState<boolean>(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const router = useRouter();
 
   type FormData = z.infer<typeof loginSchema>;
@@ -34,6 +34,7 @@ const LoginModal = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -42,30 +43,26 @@ const LoginModal = () => {
     },
   });
 
-  const onSubmit = (formData: FormData) => {
-    signIn("credentials", {
+  const onSubmit = async (formData: FormData) => {
+    setIsPending(true);
+    await signIn("credentials", {
       ...formData,
       redirect: false,
-    })
-      .then((callback) => {
-        setInPending(true);
-        if (callback?.ok) {
-          toast.success("Logged in");
-          router.refresh();
-          loginModal.onClose();
-        }
-
-        if (callback?.error) {
-          toast.error(callback.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setInPending(false);
-      });
+    }).then(({ ok, error }: any) => {
+      if (ok) {
+        toast.success("Logged in");
+        router.refresh();
+        loginModal.onClose();
+        setIsPending(false);
+        reset();
+      } else {
+        toast.error(error);
+        setIsPending(false);
+      }
+    });
   };
+
+  console.log(isPending);
 
   const toogle = useCallback(() => {
     loginModal.onClose();
@@ -134,6 +131,7 @@ const LoginModal = () => {
   return (
     <div>
       <Modal
+        isPending={isPending}
         disabled={isPending}
         isOpen={loginModal.isOpen}
         title="Login"

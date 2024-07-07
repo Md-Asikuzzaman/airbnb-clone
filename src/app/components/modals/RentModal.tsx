@@ -284,6 +284,8 @@ const RentModal = () => {
 
   return (
     <Modal
+      disabled={isPending}
+      isPending={isPending}
       isOpen={rentModal.isOpen}
       onClose={rentModal.onClose}
       onSubmit={handleSubmit(onSubmit)}

@@ -34,18 +34,6 @@ export async function POST(
       price,
     } = await req.json();
 
-    console.log({
-      title,
-      description,
-      category,
-      location,
-      guestCount,
-      roomCount,
-      bathroomCount,
-      imageSrc,
-      price,
-    });
-
     const listing = await prisma.listing.create({
       data: {
         title,

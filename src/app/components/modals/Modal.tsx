@@ -11,12 +11,13 @@ interface Props {
   onClose: () => void;
   onSubmit: () => void;
   title?: string;
-  body?: React.ReactElement;
+  body?: React.ReactElement;   
   footer?: React.ReactElement;
   actionLabel: string;
   disabled?: boolean;
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
+  isPending?: boolean;
 }
 
 const Modal: NextPage<Props> = ({
@@ -30,6 +31,7 @@ const Modal: NextPage<Props> = ({
   disabled,
   secondaryAction,
   secondaryActionLabel,
+  isPending,
 }) => {
   const [showModal, setShowModal] = useState<boolean | undefined>(isOpen);
 
@@ -112,7 +114,9 @@ const Modal: NextPage<Props> = ({
                     onClick={handleSecondaryAction}
                   />
                 )}
+
                 <Button
+                  isPending={isPending}
                   disabled={disabled}
                   label={actionLabel}
                   onClick={handleSunmit}

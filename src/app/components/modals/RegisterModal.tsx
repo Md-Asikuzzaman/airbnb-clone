@@ -37,6 +37,7 @@ const RegisterModal = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -46,7 +47,7 @@ const RegisterModal = () => {
     },
   });
 
-  const { mutate, isPending, isSuccess, data } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: async (formData: FormData) => {
       const { data } = await axios.post("/api/register", formData, {
@@ -59,10 +60,11 @@ const RegisterModal = () => {
     onError: (error: any) => {
       toast.error(error.response.data.message);
     },
-    
+
     onSuccess: () => {
       toast.success("User Created Successfully");
       toogle();
+      reset();
     },
   });
 
@@ -140,6 +142,7 @@ const RegisterModal = () => {
   return (
     <div>
       <Modal
+        isPending={isPending}
         disabled={isPending}
         isOpen={registerModal.isOpen}
         title="Register"
