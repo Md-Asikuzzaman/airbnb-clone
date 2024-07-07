@@ -14,13 +14,9 @@ export async function POST(
   res: Response
 ): Promise<NextResponse<ApiResponse>> {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json();
 
-    const { success, data, error } = registerSchema.safeParse({
-      name,
-      email,
-      password,
-    });
+    const { success, data, error } = registerSchema.safeParse(body);
 
     if (!success || error) {
       const errorMessage = error
@@ -28,12 +24,13 @@ export async function POST(
         : "Invalid request";
       return NextResponse.json({ message: errorMessage }, { status: 400 });
     }
+    const { name, email, password } = data;
 
-    const hashedPassword = await bcrypt.hash(data.password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const existingUser = await prisma.user.findUnique({
       where: {
-        email: data.email,
+        email,
       },
     });
 
@@ -46,8 +43,8 @@ export async function POST(
 
     const user = await prisma.user.create({
       data: {
-        name: data.name,
-        email: data.email,
+        name,
+        email,
         hashedPassword,
       },
     });

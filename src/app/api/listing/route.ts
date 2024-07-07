@@ -1,5 +1,6 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import prisma from "@/lib/prismadb";
+import rentSchema from "@/schema/rentSchema";
 import { Listing } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -18,8 +19,18 @@ export async function POST(
     if (!currentUser) {
       return NextResponse.json(
         { message: "Unauthorized user!" },
-        { status: 500 }
+        { status: 401 }
       );
+    }
+
+    const body = await req.json();
+    const { success, data, error } = rentSchema.safeParse(body);
+
+    if (!success || error) {
+      const errorMessage = error
+        ? error.errors.map((err) => err.message).join(", ")
+        : "Invalid request";
+      return NextResponse.json({ message: errorMessage }, { status: 400 });
     }
 
     const {
@@ -32,7 +43,7 @@ export async function POST(
       bathroomCount,
       imageSrc,
       price,
-    } = await req.json();
+    } = data;
 
     const listing = await prisma.listing.create({
       data: {
