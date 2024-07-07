@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
+import registerSchema from "@/schema/registerSchema";
 
 interface ApiResponse {
   message?: string;
@@ -12,33 +13,48 @@ export async function POST(
   req: Request,
   res: Response
 ): Promise<NextResponse<ApiResponse>> {
-  const { name, email, password } = await req.json();
   try {
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const { name, email, password } = await req.json();
+
+    const { success, data, error } = registerSchema.safeParse({
+      name,
+      email,
+      password,
+    });
+
+    if (!success || error) {
+      const errorMessage = error
+        ? error.errors.map((err) => err.message).join(", ")
+        : "Invalid request";
+      return NextResponse.json({ message: errorMessage }, { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 12);
 
     const existingUser = await prisma.user.findUnique({
       where: {
-        email,
+        email: data.email,
       },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { message: "User already exist" },
-        { status: 400 }
+        { message: "User already exists" },
+        { status: 409 }
       );
     }
 
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
+        name: data.name,
+        email: data.email,
         hashedPassword,
       },
     });
 
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
+    console.error("Failed to create user:", error);
     return NextResponse.json(
       { message: "Failed to create user" },
       { status: 500 }
