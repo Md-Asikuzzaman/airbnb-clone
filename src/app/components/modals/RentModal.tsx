@@ -110,7 +110,7 @@ const RentModal = () => {
       rentModal.onClose();
     },
 
-    onMutate: () => {
+    onSettled: () => {
       reset();
       setStep(STEPS.CATEGORY);
       router.refresh();
