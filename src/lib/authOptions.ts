@@ -7,9 +7,9 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialProvider from "next-auth/providers/credentials";
 
 import { NextAuthOptions } from "next-auth";
+import loginSchema from "@/schema/loginSchema";
 
 const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
@@ -33,25 +33,32 @@ const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        // try to find the user by email
+        const { success, data, error } = loginSchema.safeParse({
+          email: credentials?.email,
+          password: credentials?.password,
+        });
+
+        if (!success || error) {
+          throw new Error("Invalid credentials");
+        }
+
+        const { email, password } = data;
+
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email,
+            email,
           },
         });
 
-        // check if the user is not exist
         if (!user || !user.hashedPassword) {
           throw new Error("Invalid credentials");
         }
 
-        // compare both password
         const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
+          password,
           user.hashedPassword
         );
 
-        // check the password is correct
         if (!isCorrectPassword) {
           throw new Error("Invalid credentials");
         }
@@ -68,10 +75,8 @@ const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-
   secret: process.env.NEXTAUTH_SECRET,
-
-  // adapter:
+  adapter: PrismaAdapter(prisma) as any,
 };
 
 export default authOptions;
