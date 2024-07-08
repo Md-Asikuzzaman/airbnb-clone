@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 export default function Home() {
   const { data: session } = useSession();
 
-  const { data: listings, isFetching } = useQuery<Listing[]>({
+  const { data: listings, isLoading } = useQuery<Listing[]>({
     queryKey: ["fetchListings"],
     queryFn: async () => {
       const { data } = await axios.get("/api/listing", {
@@ -31,7 +31,7 @@ export default function Home() {
     <div>
       <Container>
         <div className="pt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-          {isFetching && "Loading..."}
+          {isLoading && "Loading..."}
           {listings?.map((listing) => (
             <ListingCard
               key={listing.id}
