@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 
 interface ApiResponse {
   listing?: Listing;
+  listings?: Listing[] | [];
   message?: string;
 }
 
@@ -64,6 +65,30 @@ export async function POST(
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to create listing" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  req: Request,
+  res: Response
+): Promise<NextResponse<ApiResponse>> {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return NextResponse.json(
+        { message: "Unauthorized user!" },
+        { status: 401 }
+      );
+    }
+
+    const listings = await prisma.listing.findMany();
+    return NextResponse.json({ listings }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch listings" },
       { status: 500 }
     );
   }
