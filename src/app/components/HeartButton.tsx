@@ -1,7 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { NextPage } from "next";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 interface Props {
   listingId: string;
@@ -17,7 +18,14 @@ const HeartButton: NextPage<Props> = ({ listingId, currentUser }) => {
       onClick={togglefavorite}
       className="relative hover:opacity-80 transition cursor-pointer"
     >
-      <AiOutlineHeart />
+      <AiOutlineHeart
+        size={28}
+        className="fill-white absolute -top-[2px] -right-[2px]"
+      />
+      <AiFillHeart
+        size={24}
+        className={hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}
+      />
     </div>
   );
 };
