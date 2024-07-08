@@ -60,7 +60,7 @@ export async function POST(
 }
 
 export async function GET(req: Request, res: Response) {
-  const users = await prisma.user.findMany();
+  const users = await prisma.listing.deleteMany();
 
   return NextResponse.json({ users });
 }

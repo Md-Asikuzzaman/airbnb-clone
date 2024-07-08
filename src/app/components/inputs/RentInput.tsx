@@ -4,12 +4,8 @@ import clsx from "clsx";
 import { NextPage } from "next";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
-import { z } from "zod";
-import registerSchema from "@/schema/registerSchema";
-import rentSchema from "@/schema/listingSchema";
 import React from "react";
 
-type FormData = z.infer<typeof rentSchema>;
 
 interface Props {
   id:

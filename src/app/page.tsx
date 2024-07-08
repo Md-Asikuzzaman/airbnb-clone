@@ -13,7 +13,7 @@ export default function Home() {
   const { data: session } = useSession();
 
   const { data: listings, isLoading } = useQuery<Listing[]>({
-    queryKey: ["fetchListings"],
+    queryKey: ["fetch_listings"],
     queryFn: async () => {
       const { data } = await axios.get("/api/listing", {
         baseURL: process.env.NEXTAUTH_URL,

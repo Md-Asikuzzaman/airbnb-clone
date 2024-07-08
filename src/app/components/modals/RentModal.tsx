@@ -12,10 +12,11 @@ import dynamic from "next/dynamic";
 import Counter from "../inputs/Counter";
 import ImageUpload from "../inputs/ImageUpload";
 import RentInput from "../inputs/RentInput";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Listing } from "@prisma/client";
 
 enum STEPS {
   CATEGORY = 0,
@@ -30,6 +31,7 @@ const RentModal = () => {
   const rentModal = useRentModal();
   const [step, setStep] = useState<number>(STEPS.CATEGORY);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -43,7 +45,7 @@ const RentModal = () => {
       title: "",
       description: "",
       category: "",
-      price: 1,
+      price: "1",
       location: null,
       guestCount: 1,
       roomCount: 1,
@@ -91,7 +93,7 @@ const RentModal = () => {
   };
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["createListing"],
+    mutationKey: ["create_listing"],
     mutationFn: async (formData: FieldValues) => {
       await axios.post("/api/listing", formData, {
         baseURL: process.env.NEXTAUTH_URL,
@@ -103,14 +105,57 @@ const RentModal = () => {
     },
 
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_listings"],
+      });
       toast.success("Listing Created");
       rentModal.onClose();
     },
 
+    // Optimistically update
+    // onMutate: async (newProject: FieldValues) => {
+    //   // Cancel any outgoing refetches
+    //   await queryClient.cancelQueries({ queryKey: ["fetch_listings"] });
+
+    //   // Snapshot the previous value
+    //   const previousMessages = queryClient.getQueryData(["fetch_listings"]);
+
+    //   const {
+    //     title,
+    //     description,
+    //     category,
+    //     location,
+    //     guestCount,
+    //     roomCount,
+    //     bathroomCount,
+    //     imageSrc,
+    //     price,
+    //   } = newProject;
+
+    //   // Optimistically update to the new value
+    //   queryClient.setQueryData(["fetch_listings"], (old: Listing[]) => [
+    //     ...old,
+    //     {
+    //       title,
+    //       description,
+    //       category,
+    //       locationValue: location?.value,
+    //       guestCount,
+    //       roomCount,
+    //       bathroomCount,
+    //       imageSrc,
+    //       price: parseInt(price, 10),
+    //       userId: Math.random(),
+    //     },
+    //   ]);
+
+    //   // Return a context object with the snapshotted value
+    //   return { previousMessages };
+    // },
+
     onSettled: () => {
       reset();
       setStep(STEPS.CATEGORY);
-      router.refresh();
     },
   });
 
@@ -237,7 +282,6 @@ const RentModal = () => {
         />
 
         <RentInput
-          type="text"
           id="title"
           label="Title"
           disabled={isPending}
@@ -247,7 +291,6 @@ const RentModal = () => {
         />
         <hr />
         <RentInput
-          type="text"
           id="description"
           label="Description"
           disabled={isPending}
@@ -267,9 +310,9 @@ const RentModal = () => {
           subtitle="How much do you charge per night?"
         />
         <RentInput
+          type="number"
           id="price"
           label="Price"
-          type="number"
           disabled={isPending}
           register={register}
           errors={errors}
