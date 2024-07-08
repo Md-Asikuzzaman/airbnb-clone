@@ -68,6 +68,21 @@ const authOptions: NextAuthOptions = {
     }),
   ],
 
+  callbacks: {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        return { ...token, ...session.user };
+      }
+
+      return { ...token, ...user };
+    },
+
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
+    },
+  },
+
   pages: {
     signIn: "/",
   },

@@ -1,3 +1,5 @@
+"use client";
+
 import { format } from "date-fns";
 
 import useCountries from "@/app/hooks/useCountries";
@@ -31,8 +33,6 @@ const ListingCard: NextPage<Props> = ({
   const router = useRouter();
   const { getByValue } = useCountries();
   const location = getByValue(data.locationValue);
-
-  console.log(location);
 
   const handleCencel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
