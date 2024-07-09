@@ -30,7 +30,7 @@ const Button: NextPage<Props> = ({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        "relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full",
+        "relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full z-50",
         outline
           ? "bg-white border-black text-black"
           : "bg-rose-500 border-rose-500 text-white",

@@ -67,11 +67,14 @@ const ListingCard: NextPage<Props> = ({
   }, [reservation]);
 
   return (
-    <div
-      // onClick={() => router.push(`/listings/${data.id}`)}
-      className="col-span-1 cursor-pointer group"
-    >
-      <div className="flex flex-col gap-2 w-full">
+    <div className="col-span-1 cursor-pointer group relative">
+      <div className="absolute top-3 right-3 z-30">
+        <HeartButton listingId={data.id} currentUser={currentUser} />
+      </div>
+      <div
+        onClick={() => router.push(`/listings/${data.id}`)}
+        className="flex flex-col gap-2 w-full"
+      >
         <div className="aspect-square w-full relative overflow-hidden rounded-xl">
           <Image
             fill
@@ -79,10 +82,6 @@ const ListingCard: NextPage<Props> = ({
             src={data.imageSrc}
             alt="Listing"
           />
-
-          <div className="absolute top-3 right-3">
-            <HeartButton listingId={data.id} currentUser={currentUser} />
-          </div>
         </div>
         <div className="font-semibold text-lg">
           {location?.region}, {location?.label}
