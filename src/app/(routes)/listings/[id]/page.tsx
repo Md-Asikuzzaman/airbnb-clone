@@ -67,7 +67,7 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
                   id={listing.id}
                 />
 
-                <div className="grid grid-col-1 md:grid-col-7 md:gap-10 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
                   <ListingInfo
                     user={listing.user}
                     category={category}
@@ -76,6 +76,7 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
                     guestCount={listing.guestCount}
                     bathroomCount={listing.bathroomCount}
                     locationValue={listing.locationValue}
+                    price={listing.price}
                   />
                 </div>
               </>
