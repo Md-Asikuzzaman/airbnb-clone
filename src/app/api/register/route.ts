@@ -51,7 +51,6 @@ export async function POST(
 
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
-    console.error("Failed to create user:", error);
     return NextResponse.json(
       { message: "Failed to create user" },
       { status: 500 }
@@ -60,7 +59,7 @@ export async function POST(
 }
 
 export async function GET(req: Request, res: Response) {
-  const users = await prisma.listing.deleteMany();
+  const users = await prisma.user.findMany();
 
   return NextResponse.json({ users });
 }

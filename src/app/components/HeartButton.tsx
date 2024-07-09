@@ -3,28 +3,60 @@
 import clsx from "clsx";
 import { NextPage } from "next";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import useFavorite from "../hooks/useFavorite";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { User } from "@prisma/client";
+import axios from "axios";
 
 interface Props {
   listingId: string;
-  currentUser: string;
+  currentUser: any;
 }
 
 const HeartButton: NextPage<Props> = ({ listingId, currentUser }) => {
-  const hasFavorited = false;
-  const togglefavorite = () => {};
+  const queryClient = useQueryClient();
+
+  const { data: users } = useQuery<User>({
+    queryKey: ["fetch_user"],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/users/${currentUser.id}`);
+      return data.users;
+    },
+    // enabled: isMutationSuccess ? true : false,
+  });
+
+  const isFav = users?.favoriteIds.includes(listingId);
+
+  const { mutate, isSuccess: isMutationSuccess } = useMutation({
+    mutationKey: ["favorite"],
+    mutationFn: async (id: string) => {
+      const { data } = await axios.post(`/api/favorites/${id}`);
+
+      return data.user as User;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_user"],
+      });
+
+      console.log("okey");
+    },
+  });
 
   return (
     <div
-      onClick={togglefavorite}
+      onClick={() => mutate(listingId)}
       className="relative hover:opacity-80 transition cursor-pointer"
     >
       <AiOutlineHeart
         size={28}
         className="fill-white absolute -top-[2px] -right-[2px]"
       />
+
       <AiFillHeart
         size={24}
-        className={hasFavorited ? "fill-rose-500" : "fill-neutral-500/70"}
+        className={isFav ? "fill-rose-500" : "fill-neutral-500/70"}
       />
     </div>
   );
