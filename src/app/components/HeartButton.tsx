@@ -7,6 +7,7 @@ import useFavorite from "../hooks/useFavorite";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { User } from "@prisma/client";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 interface Props {
   listingId: string;
@@ -17,17 +18,18 @@ const HeartButton: NextPage<Props> = ({ listingId, currentUser }) => {
   const queryClient = useQueryClient();
 
   const { data: users } = useQuery<User>({
-    queryKey: ["fetch_user"],
+    queryKey: ["fetch_user", currentUser.id],
     queryFn: async () => {
       const { data } = await axios.get(`/api/users/${currentUser.id}`);
       return data.users;
     },
-    // enabled: isMutationSuccess ? true : false,
+
+    enabled: currentUser ? true : false,
   });
 
   const isFav = users?.favoriteIds.includes(listingId);
 
-  const { mutate, isSuccess: isMutationSuccess } = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ["favorite"],
     mutationFn: async (id: string) => {
       const { data } = await axios.post(`/api/favorites/${id}`);
@@ -36,11 +38,10 @@ const HeartButton: NextPage<Props> = ({ listingId, currentUser }) => {
     },
 
     onSuccess: () => {
+      toast.success("Success!");
       queryClient.invalidateQueries({
         queryKey: ["fetch_user"],
       });
-
-      console.log("okey");
     },
   });
 

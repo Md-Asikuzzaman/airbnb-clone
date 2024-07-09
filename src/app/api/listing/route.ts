@@ -75,16 +75,17 @@ export async function GET(
   res: Response
 ): Promise<NextResponse<ApiResponse>> {
   try {
-    const currentUser = await getCurrentUser();
+    // const currentUser = await getCurrentUser();
 
-    if (!currentUser) {
-      return NextResponse.json(
-        { message: "Unauthorized user!" },
-        { status: 401 }
-      );
-    }
+    // if (!currentUser) {
+    //   return NextResponse.json(
+    //     { message: "Unauthorized user!" },
+    //     { status: 401 }
+    //   );
+    // }
 
     const listings = await prisma.listing.findMany();
+
     return NextResponse.json({ listings }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
