@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Heading from "../Heading";
 import Image from "next/image";
+import HeartButton from "../HeartButton";
 
 interface Props {
   title: string;
@@ -20,14 +21,10 @@ const ListingHead: NextPage<Props> = ({
   id,
 }) => {
   const { data: session } = useSession();
+  const currentUser = session?.user;
 
   const { getByValue } = useCountries();
-
   const location = getByValue(locationValue);
-
-  console.log(location);
-
-  console.log(session);
 
   return (
     <>
@@ -43,6 +40,9 @@ const ListingHead: NextPage<Props> = ({
           alt="Image"
           className="object-cover w-full"
         />
+        <div className="absolute top-5 right-5">
+          <HeartButton listingId={id} currentUser={currentUser} />
+        </div>
       </div>
     </>
   );

@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { data: session } = useSession();
+  const currentUser = session?.user;
 
   const { data: listings, isLoading } = useQuery<Listing[]>({
     queryKey: ["fetch_listings"],
@@ -35,7 +36,7 @@ export default function Home() {
           {listings?.map((listing) => (
             <ListingCard
               key={listing.id}
-              currentUser={session?.user}
+              currentUser={currentUser}
               data={listing}
             />
           ))}

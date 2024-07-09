@@ -31,6 +31,7 @@ const ListingCard: NextPage<Props> = ({
   currentUser,
 }) => {
   const router = useRouter();
+  
   const { getByValue } = useCountries();
   const location = getByValue(data.locationValue);
 
