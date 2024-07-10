@@ -4,13 +4,21 @@ import Container from "@/app/components/Container";
 import EmptyState from "@/app/components/EmptyState";
 import ListingHead from "@/app/components/listing/ListingHead";
 import ListingInfo from "@/app/components/listing/ListingInfo";
+import ListingReservation from "@/app/components/listing/ListingReservation";
+import useLoginModal from "@/app/hooks/useLoginModal";
 import { categories } from "@/lib/categories";
-import { Listing, User } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { Listing, Reservation, User } from "@prisma/client";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import {
+  differenceInCalendarDays,
+  eachDayOfInterval,
+  endOfDay,
+} from "date-fns";
 import { NextPage } from "next";
-import { useMemo } from "react";
-
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Range } from "react-date-range";
 interface Props {
   params: {
     id: string;
@@ -23,6 +31,17 @@ type ListingWithUser = Listing & {
 };
 
 const Page: NextPage<Props> = ({ params: { id } }) => {
+  const { data } = useSession();
+  const currentUser = data?.user;
+
+  const loginModal = useLoginModal();
+
+  const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  };
+
   const {
     data: listing,
     isLoading,
@@ -45,6 +64,62 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
     return categories.find((item) => item.label === listing?.category);
   }, [listing?.category]);
 
+  // for date
+
+  const [totalPrice, setTotalPrice] = useState<number | undefined>(
+    listing?.price
+  );
+  const [dateRange, setDateRange] = useState<Range>(initialDateRange);
+
+  const reservations: any[] = [];
+
+  const disabledDates = useMemo(() => {
+    let dates: Date[] = [];
+
+    reservations.forEach((reservation) => {
+      const range = eachDayOfInterval({
+        start: new Date(reservation.startDate),
+        end: new Date(reservation.endDate),
+      });
+
+      dates = [...dates, ...range];
+    });
+
+    return dates;
+  }, [reservations]);
+
+  useEffect(() => {
+    if (dateRange.startDate && dateRange.endDate) {
+      const dayCount = differenceInCalendarDays(
+        dateRange.endDate,
+        dateRange.startDate
+      );
+      if (dayCount && listing?.price) {
+        setTotalPrice(dayCount * listing?.price);
+      } else {
+        setTotalPrice(listing?.price);
+      }
+    }
+  }, [dateRange, listing?.price]);
+
+  const onCreateReservation = useCallback(() => {
+    if (!currentUser) {
+      loginModal.onOpen();
+    }
+
+    console.log({
+      totalPrice,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      listingId: listing?.id,
+    });
+  }, [currentUser, loginModal, dateRange, listing, totalPrice]);
+
+  // Create a new reservation
+
+  // const { } = useMutation
+
+  // check api
   if (isError) {
     return <EmptyState />;
   }
@@ -76,8 +151,19 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
                     guestCount={listing.guestCount}
                     bathroomCount={listing.bathroomCount}
                     locationValue={listing.locationValue}
-                    price={listing.price}
                   />
+
+                  <div className="order-first mb-10 md:order-last md:col-span-3">
+                    <ListingReservation
+                      price={listing.price}
+                      totalPrice={totalPrice}
+                      onChangeDate={(value) => setDateRange(value)}
+                      dateRange={dateRange}
+                      onSubmit={onCreateReservation}
+                      disabled={false}
+                      disabledDates={disabledDates}
+                    />
+                  </div>
                 </div>
               </>
             )}

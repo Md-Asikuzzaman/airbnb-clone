@@ -1,16 +1,16 @@
 "use client";
 
 import useCountries from "@/app/hooks/useCountries";
-import { Listing, Reservation, User } from "@prisma/client";
+import { Reservation, User } from "@prisma/client";
 import { NextPage } from "next";
 import { IconType } from "react-icons";
 import Avatar from "../Avatar";
 import ListingCategory from "./ListingCategory";
 import dynamic from "next/dynamic";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { eachDayOfInterval } from "date-fns";
+import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { useSession } from "next-auth/react";
 import useLoginModal from "@/app/hooks/useLoginModal";
 
@@ -18,11 +18,7 @@ const Map = dynamic(() => import("./../MyMap"), {
   ssr: false,
 });
 
-const initialDateRange = {
-  startDate: new Date(),
-  endDate: new Date(),
-  key: "selection",
-};
+
 
 interface Props {
   user: User;
@@ -38,9 +34,6 @@ interface Props {
   guestCount: number;
   bathroomCount: number;
   locationValue: string;
-  // removeable
-  reservations?: Reservation[];
-  price: number;
 }
 
 const ListingInfo: NextPage<Props> = ({
@@ -51,9 +44,6 @@ const ListingInfo: NextPage<Props> = ({
   guestCount,
   bathroomCount,
   locationValue,
-  // removeable
-  reservations = [],
-  price,
 }) => {
   const { getByValue } = useCountries();
   const coordinates = getByValue(locationValue)?.latlng;
@@ -61,33 +51,8 @@ const ListingInfo: NextPage<Props> = ({
   const { data } = useSession();
   const currentUser = data?.user;
 
-  const loginModal = useLoginModal();
 
-  const disabledDates = useMemo(() => {
-    let dates: Date[] = [];
-
-    reservations.forEach((reservation) => {
-      const range = eachDayOfInterval({
-        start: new Date(reservation.startDate),
-        end: new Date(reservation.endDate),
-      });
-
-      dates = [...dates, ...range];
-    });
-
-    return dates;
-  }, [reservations]);
-
-  console.log(disabledDates);
-
-  const [totalProce, setTotalProce] = useState<number>(price);
-  const [dataRange, setDateRange] = useState(initialDateRange);
-
-  const onCreateReservation = useCallback(() => {
-    if (!currentUser) {
-      loginModal.onOpen();
-    }
-  }, [currentUser, loginModal]);
+ 
 
   return (
     <div className="col-span-4 flex flex-col gap-8">
