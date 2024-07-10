@@ -8,7 +8,7 @@ import ListingReservation from "@/app/components/listing/ListingReservation";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { categories } from "@/lib/categories";
 import { Listing, Reservation, User } from "@prisma/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {
   differenceInCalendarDays,
@@ -19,6 +19,7 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Range } from "react-date-range";
+import toast from "react-hot-toast";
 interface Props {
   params: {
     id: string;
@@ -35,6 +36,8 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
   const currentUser = data?.user;
 
   const loginModal = useLoginModal();
+
+  const queryClient = useQueryClient();
 
   const initialDateRange = {
     startDate: new Date(),
@@ -71,19 +74,29 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
   );
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
-  const reservations: any[] = [];
+  const { data: reservations, isLoading: loading } = useQuery<Reservation[]>({
+    queryKey: ["fetch_reservations"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/reservations");
+      return data.reservations;
+    },
+  });
+
+  console.log(reservations);
 
   const disabledDates = useMemo(() => {
     let dates: Date[] = [];
 
-    reservations.forEach((reservation) => {
-      const range = eachDayOfInterval({
-        start: new Date(reservation.startDate),
-        end: new Date(reservation.endDate),
-      });
+    if (reservations) {
+      reservations.forEach((reservation) => {
+        const range = eachDayOfInterval({
+          start: new Date(reservation.startDate),
+          end: new Date(reservation.endDate),
+        });
 
-      dates = [...dates, ...range];
-    });
+        dates = [...dates, ...range];
+      });
+    }
 
     return dates;
   }, [reservations]);
@@ -102,22 +115,35 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
     }
   }, [dateRange, listing?.price]);
 
+  // Create a new reservation
+  const { mutate } = useMutation({
+    mutationKey: ["add_reservation"],
+    mutationFn: async (formData: any) => {
+      const { data } = await axios.post("/api/reservations", formData, {
+        baseURL: process.env.NEXTAUTH_URL,
+      });
+      return data.reservation;
+    },
+
+    onSuccess: () => {
+      toast.success("Reservation created!");
+      queryClient.invalidateQueries({
+        queryKey: ["fetch_reservations"],
+      });
+    },
+  });
+
   const onCreateReservation = useCallback(() => {
     if (!currentUser) {
       loginModal.onOpen();
     }
-
-    console.log({
+    mutate({
       totalPrice,
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
       listingId: listing?.id,
     });
-  }, [currentUser, loginModal, dateRange, listing, totalPrice]);
-
-  // Create a new reservation
-
-  // const { } = useMutation
+  }, [currentUser, loginModal, dateRange, listing, totalPrice, mutate]);
 
   // check api
   if (isError) {

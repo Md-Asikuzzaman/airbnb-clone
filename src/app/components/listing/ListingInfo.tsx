@@ -18,8 +18,6 @@ const Map = dynamic(() => import("./../MyMap"), {
   ssr: false,
 });
 
-
-
 interface Props {
   user: User;
   category:
@@ -50,9 +48,6 @@ const ListingInfo: NextPage<Props> = ({
 
   const { data } = useSession();
   const currentUser = data?.user;
-
-
- 
 
   return (
     <div className="col-span-4 flex flex-col gap-8">

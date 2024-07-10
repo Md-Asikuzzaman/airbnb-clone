@@ -31,7 +31,7 @@ const ListingCard: NextPage<Props> = ({
   currentUser,
 }) => {
   const router = useRouter();
-  
+
   const { getByValue } = useCountries();
   const location = getByValue(data.locationValue);
 
@@ -69,9 +69,11 @@ const ListingCard: NextPage<Props> = ({
 
   return (
     <div className="col-span-1 cursor-pointer group relative">
-      <div className="absolute top-3 right-3 z-30">
-        <HeartButton listingId={data.id} currentUser={currentUser} />
-      </div>
+      {currentUser && (
+        <div className="absolute top-3 right-3 z-30">
+          <HeartButton listingId={data.id} currentUser={currentUser} />
+        </div>
+      )}
       <div
         onClick={() => router.push(`/listings/${data.id}`)}
         className="flex flex-col gap-2 w-full"
