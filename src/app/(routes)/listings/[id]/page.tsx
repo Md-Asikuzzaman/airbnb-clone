@@ -17,6 +17,7 @@ import {
 } from "date-fns";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Range } from "react-date-range";
 import toast from "react-hot-toast";
@@ -32,19 +33,13 @@ type ListingWithUser = Listing & {
 };
 
 const Page: NextPage<Props> = ({ params: { id } }) => {
+  const loginModal = useLoginModal();
+  const queryClient = useQueryClient();
+
   const { data } = useSession();
   const currentUser = data?.user;
 
-  const loginModal = useLoginModal();
-
-  const queryClient = useQueryClient();
-
-  const initialDateRange = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  };
-
+  // Fetch all listings
   const {
     data: listing,
     isLoading,
@@ -61,13 +56,16 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
     enabled: id ? true : false,
   });
 
-  console.log(listing);
-
   const category = useMemo(() => {
     return categories.find((item) => item.label === listing?.category);
   }, [listing?.category]);
 
-  // for date
+  // Set the initial date for select-dates
+  const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  };
 
   const [totalPrice, setTotalPrice] = useState<number | undefined>(
     listing?.price
@@ -80,15 +78,16 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
       const { data } = await axios.get("/api/reservations");
       return data.reservations;
     },
+
+    retryDelay: 1000,
   });
 
-  console.log(reservations);
-
+  // Check all disabled date based on reservation
   const disabledDates = useMemo(() => {
     let dates: Date[] = [];
 
-    if (reservations) {
-      reservations.forEach((reservation) => {
+    if (reservations && Array.isArray(reservations)) {
+      reservations?.map((reservation) => {
         const range = eachDayOfInterval({
           start: new Date(reservation.startDate),
           end: new Date(reservation.endDate),
@@ -116,7 +115,7 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
   }, [dateRange, listing?.price]);
 
   // Create a new reservation
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["add_reservation"],
     mutationFn: async (formData: any) => {
       const { data } = await axios.post("/api/reservations", formData, {
@@ -125,10 +124,12 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
       return data.reservation;
     },
 
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Reservation created!");
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ["fetch_reservations"],
+        type: "active",
+        exact: true,
       });
     },
   });
@@ -137,6 +138,14 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
     if (!currentUser) {
       loginModal.onOpen();
     }
+
+    console.log({
+      totalPrice,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      listingId: listing?.id,
+    });
+
     mutate({
       totalPrice,
       startDate: dateRange.startDate,
@@ -144,6 +153,24 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
       listingId: listing?.id,
     });
   }, [currentUser, loginModal, dateRange, listing, totalPrice, mutate]);
+
+  const hasReservation1 =
+    reservations &&
+    Array.isArray(reservations) &&
+    reservations?.some(
+      (reservation) =>
+        new Date(reservation.startDate).toLocaleDateString() ===
+        initialDateRange.startDate?.toLocaleDateString()
+    );
+
+  const hasReservation2 =
+    reservations &&
+    Array.isArray(reservations) &&
+    reservations?.some(
+      (reservation) =>
+        new Date(reservation.startDate).toLocaleDateString() ===
+        dateRange.startDate?.toLocaleDateString()
+    );
 
   // check api
   if (isError) {
@@ -179,15 +206,20 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
                     locationValue={listing.locationValue}
                   />
 
-                  <div className="order-first mb-10 md:order-last md:col-span-3">
+                  <div className="order-first mb-10 md:order-last md:col-span-3 z-0">
                     <ListingReservation
                       price={listing.price}
                       totalPrice={totalPrice}
                       onChangeDate={(value) => setDateRange(value)}
                       dateRange={dateRange}
                       onSubmit={onCreateReservation}
-                      disabled={false}
                       disabledDates={disabledDates}
+                      isPending={isPending}
+                      disabled={
+                        isPending || loading || !hasReservation2
+                          ? hasReservation2
+                          : hasReservation1
+                      }
                     />
                   </div>
                 </div>

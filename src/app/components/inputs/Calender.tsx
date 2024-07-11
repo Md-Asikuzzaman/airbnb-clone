@@ -15,7 +15,7 @@ interface Props {
 const Calender: NextPage<Props> = ({ value, onChange, disabledDates }) => {
   //   console.log(value);
 
-  console.log(disabledDates);
+  // console.log(disabledDates);
 
   return (
     <div>

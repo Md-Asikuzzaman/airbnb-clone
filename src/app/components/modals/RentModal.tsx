@@ -104,9 +104,11 @@ const RentModal = () => {
       toast.error(error.response.data.message);
     },
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ["fetch_listings"],
+        type: "active",
+        exact: true,
       });
       toast.success("Listing Created");
       rentModal.onClose();
@@ -219,7 +221,7 @@ const RentModal = () => {
           onChange={(value) => setCustomValue("location", value)}
         />
         <div className="h-[35vh] rounded-lg bg-slate-300 overflow-hidden">
-          <MyMap center={location?.latlng} />
+          <MyMap latlng={location?.latlng} />
         </div>
       </div>
     );

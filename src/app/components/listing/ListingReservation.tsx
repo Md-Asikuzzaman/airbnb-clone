@@ -13,6 +13,7 @@ interface Props {
   onSubmit: () => void;
   disabled?: boolean;
   disabledDates?: Date[];
+  isPending: boolean;
 }
 
 const ListingReservation: NextPage<Props> = ({
@@ -22,6 +23,8 @@ const ListingReservation: NextPage<Props> = ({
   onChangeDate,
   totalPrice,
   onSubmit,
+  isPending,
+  disabled,
 }) => {
   console.log(totalPrice);
 
@@ -41,7 +44,12 @@ const ListingReservation: NextPage<Props> = ({
       <hr />
 
       <div className="p-4">
-        <Button label="Reserve" disabled={false} onClick={onSubmit} />
+        <Button
+          isPending={isPending}
+          label="Reserve"
+          disabled={disabled}
+          onClick={onSubmit}
+        />
       </div>
 
       <div className="p-4 flex flex-row items-center justify-between font-semibold text-lg">
