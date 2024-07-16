@@ -216,9 +216,9 @@ const Page: NextPage<Props> = ({ params: { id } }) => {
                       disabledDates={disabledDates}
                       isPending={isPending}
                       disabled={
-                        isPending || loading || !hasReservation2
-                          ? hasReservation2
-                          : hasReservation1
+                        isPending ||
+                        loading ||
+                        (!hasReservation2 ? hasReservation2 : hasReservation1)
                       }
                     />
                   </div>

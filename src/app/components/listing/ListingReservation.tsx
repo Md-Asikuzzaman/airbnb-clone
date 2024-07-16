@@ -26,7 +26,7 @@ const ListingReservation: NextPage<Props> = ({
   isPending,
   disabled,
 }) => {
-  console.log(totalPrice);
+  console.log(disabled);
 
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">

@@ -17,9 +17,10 @@ import Button from "../Button";
 import loginSchema from "@/schema/loginSchema";
 import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import LoginInput from "../inputs/LoginInput";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LoginModal = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -51,9 +52,10 @@ const LoginModal = () => {
     }).then(({ ok, error }: any) => {
       if (ok) {
         toast.success("Logged in");
-        loginModal.onClose();
         setIsPending(false);
         reset();
+        window.location.href = "/";
+        loginModal.onClose();
       } else {
         toast.error(error);
         setIsPending(false);
