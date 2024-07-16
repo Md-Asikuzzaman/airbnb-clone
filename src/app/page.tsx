@@ -24,6 +24,9 @@ export default function Home() {
     },
   });
 
+
+  console.log(listings)
+
   if (listings?.length === 0) {
     return <EmptyState showReset />;
   }

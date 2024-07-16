@@ -84,7 +84,11 @@ export async function GET(
     //   );
     // }
 
-    const listings = await prisma.listing.findMany();
+    const listings = await prisma.listing.findMany({
+      include: {
+        reservations: true,
+      },
+    });
 
     return NextResponse.json({ listings }, { status: 200 });
   } catch (error) {

@@ -1,9 +1,15 @@
-import { NextPage } from "next";
+import getCurrentUser from "@/actions/getCurrentUser";
+import EmptyState from "@/app/components/EmptyState";
+import TripsClient from "./TripsClient";
 
-interface Props {}
+const Page = async () => {
+  const currentUser = await getCurrentUser();
 
-const Page: NextPage<Props> = ({}) => {
-  return <div>trips</div>;
+  if (!currentUser) {
+    return <EmptyState title="Unauthorized" subtitle="Please login" />;
+  }
+
+  return <TripsClient userId={currentUser.id} />;
 };
 
 export default Page;

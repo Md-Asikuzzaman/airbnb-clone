@@ -11,15 +11,15 @@ import Image from "next/image";
 import HeartButton from "../HeartButton";
 import Button from "../Button";
 
-interface Props {
-  data: Listing;
+type Props = {
+  data: Listing | any;
   reservation?: Reservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
   actionLabel?: string;
   actionId?: string;
   currentUser: any;
-}
+};
 
 const ListingCard: NextPage<Props> = ({
   data,
@@ -32,8 +32,10 @@ const ListingCard: NextPage<Props> = ({
 }) => {
   const router = useRouter();
 
+  console.log(data);      
+
   const { getByValue } = useCountries();
-  const location = getByValue(data.locationValue);
+  const location = getByValue(data.locationValue || data.listing.locationValue);
 
   const handleCencel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -82,7 +84,7 @@ const ListingCard: NextPage<Props> = ({
           <Image
             fill
             className="group-hover:scale-110 transition"
-            src={data.imageSrc}
+            src={data.imageSrc || data?.listing.imageSrc}
             alt="Listing"
           />
         </div>

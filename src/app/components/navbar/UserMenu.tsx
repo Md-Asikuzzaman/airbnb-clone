@@ -10,14 +10,15 @@ import { User } from "@prisma/client";
 import { NextPage } from "next";
 import { signOut } from "next-auth/react";
 import useRentModal from "@/app/hooks/useRentModal";
+import { useRouter } from "next/navigation";
 
 interface Props {
   currentUser?: User | null;
 }
 
 const UserMenu: NextPage<Props> = ({ currentUser }) => {
+  const router = useRouter();
   const rentModal = useRentModal();
-
   const resisterModal = useRegisterModal();
   const loginModal = useLoginModal();
 
@@ -62,7 +63,10 @@ const UserMenu: NextPage<Props> = ({ currentUser }) => {
           <div className="flex flex-col cursor-pointer">
             {currentUser ? (
               <>
-                <MenuItem onClick={() => {}} label="My trips" />
+                <MenuItem
+                  onClick={() => router.push("/trips")}
+                  label="My trips"
+                />
                 <MenuItem onClick={() => {}} label="My favorites" />
                 <MenuItem onClick={() => {}} label="My reservations" />
                 <MenuItem onClick={() => {}} label="My properties" />

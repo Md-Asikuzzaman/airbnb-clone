@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 interface ApiResponse {
   message?: string;
   reservation?: Listing;
+  reservations?: Listing[];
 }
 
 export async function POST(
@@ -61,7 +62,11 @@ export async function POST(
 }
 
 export async function GET(req: Request, res: Response) {
-  const reservations = await prisma.reservation.findMany();
+  const reservations = await prisma.reservation.findMany({
+    include: {
+      listing: true,
+    },
+  });
 
   return NextResponse.json({ reservations });
 }
